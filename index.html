@@ -63,7 +63,7 @@
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
-    .wc-glyph {
+    .wc-glyph, .wc-font {
       font-family: 'Noto Sans Warang Citi', 'Noto Sans Devanagari', sans-serif;
       line-height: 1.4;
     }
@@ -134,6 +134,34 @@
         >
           <span id="themeIcon" class="text-base leading-none">🌙</span>
         </button>
+
+        <!-- फ़ोटो और "Create by 𑢶𑢪𑢫𑢺" वाला हिस्सा -->
+<div class="flex flex-col items-center shrink-0 select-none pointer-events-none">
+  <div class="relative w-16 h-16 rounded-full border-2 border-amber-400 shadow-md overflow-hidden bg-gradient-to-br from-emerald-950 to-emerald-700 flex items-center justify-center">
+    <img
+      src="https://i.ibb.co/jkD3yG60/CAF52593-677F-4BC5-A059-BBAD425454BC.jpg"
+      alt="Create by 𑢶𑣊𑣋𑣚"
+      draggable="false"
+      class="w-full h-full rounded-full object-cover block"
+      onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+    />
+    <div class="hidden w-full h-full items-center justify-center">
+      <svg viewBox="0 0 64 64" width="64" height="64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="𑢶𑣊𑣋𑣚">
+        <defs>
+          <linearGradient id="headerProfileBadgeGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#064e3b" />
+            <stop offset="100%" stop-color="#166534" />
+          </linearGradient>
+        </defs>
+        <circle cx="32" cy="32" r="32" fill="url(#headerProfileBadgeGrad)" />
+        <text x="32" y="38" text-anchor="middle" fill="#fde68a" font-size="14" font-weight="700" font-family="'Noto Sans Warang Citi', sans-serif">𑢶𑣀𑣋𑣚</text>
+      </svg>
+    </div>
+  </div>
+  <span class="mt-1 text-[11px] font-bold text-amber-200 whitespace-nowrap leading-tight">
+    Create by <span class="wc-font text-xs text-amber-300">𑢶𑢪𑢫𑢺</span>
+  </span>
+</div>
       </div>
     </div>
   </header>
