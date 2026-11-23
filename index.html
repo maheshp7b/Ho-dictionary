@@ -125,17 +125,7 @@
           </button>
         </nav>
 
-        <!-- Export JSON Button -->
-        <button
-          id="exportJsonBtn"
-          type="button"
-          title="Download Complete Deduplicated MASTER_HO_DICTIONARY.json"
-          class="px-3 py-2 rounded-2xl bg-ochre-400/25 hover:bg-ochre-400/45 dark:bg-ochre-500/20 dark:hover:bg-ochre-500/35 text-stone-800 dark:text-ochre-300 border border-ochre-500/40 text-xs font-extrabold flex items-center gap-1.5 transition-colors"
-        >
-          <span>⬇ Export JSON</span>
-        </button>
-
-        <!-- Dark/Light Theme Toggle -->
+<!-- Dark/Light Theme Toggle -->
         <button
           id="themeToggleBtn"
           type="button"
@@ -6274,9 +6264,37 @@
       });
     }
 
-    // ==================== 6. UI RENDERERS ====================
+    
+    // ==================== HINDI SPEECH PRONUNCIATION (CLEAR TAP/TOUCH) ====================
+    function speakHindiPronunciation(textToSpeak, toastLabel = 'हिन्दी उच्चारण') {
+      const cleanText = String(textToSpeak || '').trim();
+      if (!cleanText) return;
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        try {
+          window.speechSynthesis.cancel();
+          const utterance = new SpeechSynthesisUtterance(cleanText);
+          utterance.lang = 'hi-IN';
+          utterance.rate = 0.92;
+          utterance.pitch = 1.0;
+          const voices = window.speechSynthesis.getVoices ? window.speechSynthesis.getVoices() : [];
+          const hindiVoice = voices.find((v) => v.lang && v.lang.toLowerCase().startsWith('hi'));
+          if (hindiVoice) {
+            utterance.voice = hindiVoice;
+          }
+          window.speechSynthesis.speak(utterance);
+        } catch (err) {
+          // Fallback silently if speechSynthesis is restricted
+        }
+      }
+      if (typeof showToast === 'function' && toastLabel) {
+        showToast(`🔊 ${toastLabel}: ${cleanText}`);
+      }
+    }
+
+// ==================== 6. UI RENDERERS ====================
     function createWordCardHtml(item) {
       const isFav = state.favorites.has(item.id);
+      const speakPhrase = `${item.ho}। हिन्दी अर्थ: ${item.hi}`;
       return `
         <article class="animate-card bg-white dark:bg-stone-900 rounded-3xl p-5 border border-parchment-200 dark:border-stone-800 hover:border-forest-600/50 dark:hover:border-emerald-500/40 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between gap-4">
           <div>
@@ -6285,6 +6303,15 @@
                 ${escapeHtml(item.category)}
               </span>
               <div class="flex items-center gap-1">
+                <button
+                  type="button"
+                  data-speak-hi="${escapeHtml(speakPhrase)}"
+                  data-speak-label="${escapeHtml(item.ho)}"
+                  title="स्पर्श करते ही हिन्दी उच्चारण सुनें"
+                  class="speak-hi-btn px-2 py-1.5 rounded-xl text-xs font-extrabold bg-terracotta-50 dark:bg-terracotta-700/30 text-terracotta-700 dark:text-amber-300 hover:bg-terracotta-500 hover:text-white transition-colors"
+                >
+                  🔊 बोलें
+                </button>
                 <button
                   type="button"
                   data-fav-id="${escapeHtml(item.id)}"
@@ -6312,16 +6339,20 @@
               <button
                 type="button"
                 data-copy-single="${escapeHtml(item.wc)}"
-                title="Warang Citi कॉपी करें"
-                class="copy-single-btn text-left wc-glyph text-3xl font-bold text-terracotta-600 dark:text-ochre-400 hover:opacity-80 tracking-wide block"
+                data-speak-hi="${escapeHtml(speakPhrase)}"
+                data-speak-label="${escapeHtml(item.ho)}"
+                title="Warang Citi कॉपी करें व हिन्दी उच्चारण सुनें"
+                class="copy-single-btn speak-hi-target text-left wc-glyph text-3xl font-bold text-terracotta-600 dark:text-ochre-400 hover:opacity-80 tracking-wide block"
               >
                 ${escapeHtml(item.wc)}
               </button>
               <button
                 type="button"
                 data-copy-single="${escapeHtml(item.ho)}"
-                title="हो देवनागरी कॉपी करें"
-                class="copy-single-btn text-left text-xl font-extrabold text-stone-900 dark:text-white hover:text-forest-700 dark:hover:text-emerald-300 block"
+                data-speak-hi="${escapeHtml(speakPhrase)}"
+                data-speak-label="${escapeHtml(item.ho)}"
+                title="हो देवनागरी कॉपी करें व हिन्दी उच्चारण सुनें"
+                class="copy-single-btn speak-hi-target text-left text-xl font-extrabold text-stone-900 dark:text-white hover:text-forest-700 dark:hover:text-emerald-300 block"
               >
                 ${escapeHtml(item.ho)}
               </button>
@@ -6329,8 +6360,13 @@
           </div>
 
           <div class="pt-3 border-t border-parchment-200/80 dark:border-stone-800 space-y-1.5 text-sm">
-            <div class="flex items-start gap-2">
-              <span class="shrink-0 text-[10px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-forest-50 dark:bg-forest-900/60 text-forest-700 dark:text-emerald-300 mt-0.5">हिन्दी</span>
+            <div
+              data-speak-hi="${escapeHtml(item.hi)}"
+              data-speak-label="${escapeHtml(item.ho)} (हिन्दी)"
+              title="स्पर्श करें: हिन्दी अर्थ सुनें"
+              class="speak-hi-target flex items-start gap-2 cursor-pointer rounded-xl p-1 -m-1 hover:bg-parchment-50 dark:hover:bg-stone-800/60 transition-colors"
+            >
+              <span class="shrink-0 text-[10px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-forest-50 dark:bg-forest-900/60 text-forest-700 dark:text-emerald-300 mt-0.5">हिन्दी 🔊</span>
               <p class="font-bold text-stone-900 dark:text-white">${escapeHtml(item.hi)}</p>
             </div>
             <div class="flex items-start gap-2">
@@ -6429,11 +6465,20 @@
             const isFav = state.favorites.has(item.id);
             return `
               <tr class="hover:bg-parchment-50 dark:hover:bg-stone-800/50 transition-colors">
-                <td class="py-3 px-4 wc-glyph text-2xl font-bold text-terracotta-600 dark:text-ochre-400">${escapeHtml(item.wc)}</td>
-                <td class="py-3 px-4 font-extrabold text-stone-900 dark:text-white">${escapeHtml(item.ho)}</td>
-                <td class="py-3 px-4 font-bold text-stone-900 dark:text-white">${escapeHtml(item.hi)}</td>
+                <td data-speak-hi="${escapeHtml(item.ho + '। हिन्दी अर्थ: ' + item.hi)}" data-speak-label="${escapeHtml(item.ho)}" class="speak-hi-target cursor-pointer py-3 px-4 wc-glyph text-2xl font-bold text-terracotta-600 dark:text-ochre-400">${escapeHtml(item.wc)}</td>
+                <td data-speak-hi="${escapeHtml(item.ho + '। हिन्दी अर्थ: ' + item.hi)}" data-speak-label="${escapeHtml(item.ho)}" class="speak-hi-target cursor-pointer py-3 px-4 font-extrabold text-stone-900 dark:text-white">${escapeHtml(item.ho)}</td>
+                <td data-speak-hi="${escapeHtml(item.hi)}" data-speak-label="${escapeHtml(item.ho)} (हिन्दी)" class="speak-hi-target cursor-pointer py-3 px-4 font-bold text-stone-900 dark:text-white">${escapeHtml(item.hi)}</td>
                 <td class="py-3 px-4 font-bold text-stone-800 dark:text-stone-200">${escapeHtml(item.en)}</td>
                 <td class="py-3 px-4 text-right whitespace-nowrap">
+                  <button
+                    type="button"
+                    data-speak-hi="${escapeHtml(item.ho + '। हिन्दी अर्थ: ' + item.hi)}"
+                    data-speak-label="${escapeHtml(item.ho)}"
+                    title="स्पर्श करते ही हिन्दी उच्चारण सुनें"
+                    class="speak-hi-btn px-2 py-1 rounded-lg text-xs font-extrabold bg-terracotta-50 dark:bg-terracotta-700/30 text-terracotta-700 dark:text-amber-300 hover:bg-terracotta-500 hover:text-white transition-colors"
+                  >
+                    🔊
+                  </button>
                   <button
                     type="button"
                     data-fav-id="${escapeHtml(item.id)}"
@@ -6731,32 +6776,7 @@
         localStorage.setItem(STORAGE_THEME_KEY, isDark ? 'dark' : 'light');
       });
 
-      // Export complete deduplicated MASTER_HO_DICTIONARY.json
-      document.getElementById('exportJsonBtn').addEventListener('click', () => {
-        try {
-          const cleanExport = MASTER_HO_DICTIONARY.map(({ wc, ho, en, hi, category }) => ({
-            wc,
-            ho,
-            en,
-            hi,
-            category
-          }));
-          const blob = new Blob([JSON.stringify(cleanExport, null, 2)], { type: 'application/json' });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = 'MASTER_HO_DICTIONARY.json';
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          URL.revokeObjectURL(url);
-          showToast(`✓ MASTER_HO_DICTIONARY.json डाउनलोड हुआ (${cleanExport.length} शब्द)`);
-        } catch (err) {
-          showToast('JSON निर्यात में त्रुटि आई');
-        }
-      });
-
-      // Search & Field selector
+// Search & Field selector
       const searchInput = document.getElementById('searchInput');
       const clearSearchBtn = document.getElementById('clearSearchBtn');
 
@@ -6916,8 +6936,17 @@
         });
       });
 
-      // Card & Table delegation (Favorite, 4-lang Copy, Single-script Copy)
+      // Card & Table delegation (Hindi Speech on Touch/Tap, Favorite, 4-lang Copy, Single-script Copy)
       const handleCardInteractions = (e) => {
+        const speakBtn = e.target.closest('.speak-hi-btn');
+        if (speakBtn) {
+          speakHindiPronunciation(
+            speakBtn.getAttribute('data-speak-hi'),
+            speakBtn.getAttribute('data-speak-label') || 'हिन्दी उच्चारण'
+          );
+          return;
+        }
+
         const favBtn = e.target.closest('.toggle-fav-btn');
         if (favBtn) {
           const id = favBtn.getAttribute('data-fav-id');
@@ -6940,6 +6969,7 @@
           const id = copyBtn.getAttribute('data-copy-id');
           const word = MASTER_HO_DICTIONARY.find((w) => w.id === id);
           if (word) {
+            speakHindiPronunciation(`${word.ho}। हिन्दी अर्थ: ${word.hi}`, word.ho);
             copyText(`${word.wc} | ${word.ho} | ${word.hi} | ${word.en}`, '4-भाषा शब्द कॉपी');
           }
           return;
@@ -6947,7 +6977,21 @@
 
         const singleCopyBtn = e.target.closest('.copy-single-btn');
         if (singleCopyBtn) {
+          const spoken = singleCopyBtn.getAttribute('data-speak-hi');
+          const lbl = singleCopyBtn.getAttribute('data-speak-label') || 'हिन्दी उच्चारण';
+          if (spoken) {
+            speakHindiPronunciation(spoken, lbl);
+          }
           copyText(singleCopyBtn.getAttribute('data-copy-single'), 'शब्द कॉपी');
+          return;
+        }
+
+        const speakTarget = e.target.closest('.speak-hi-target');
+        if (speakTarget) {
+          speakHindiPronunciation(
+            speakTarget.getAttribute('data-speak-hi'),
+            speakTarget.getAttribute('data-speak-label') || 'हिन्दी उच्चारण'
+          );
         }
       };
 
