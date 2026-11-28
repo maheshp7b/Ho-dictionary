@@ -8,12 +8,12 @@
   <meta name="theme-color" content="#2d4a2b" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <link id="site-icon" rel="icon" type="image/jpeg" href="https://i.ibb.co/mrx8nnpX/image-da482972.jpg" />
-  <link id="apple-icon" rel="apple-touch-icon" href="https://i.ibb.co/mrx8nnpX/image-da482972.jpg" />
+  <link id="site-icon" rel="icon" type="image/jpeg" href="https://i.ibb.co/Kz5GHSz3/AISelect-20261129-005657-Gallery.jpg" />
+  <link id="apple-icon" rel="apple-touch-icon" href="https://i.ibb.co/Kz5GHSz3/AISelect-20261129-005657-Gallery.jpg" />
   <link id="pwa-manifest" rel="manifest" />
   <script>
     (function () {
-      const iconUrl = "https://i.ibb.co/mrx8nnpX/image-da482972.jpg";
+      const iconUrl = "https://i.ibb.co/Kz5GHSz3/AISelect-20261129-005657-Gallery.jpg";
       const siteIcon = document.getElementById("site-icon");
       const appleIcon = document.getElementById("apple-icon");
       if (siteIcon) siteIcon.href = iconUrl;
@@ -123,7 +123,7 @@
 
   <!-- ==================== STICKY HEADER ==================== -->
   <header class="sticky top-0 z-40 bg-parchment-50/95 dark:bg-stone-950/95 backdrop-blur-md border-b border-parchment-200 dark:border-stone-800">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap lg:grid lg:grid-cols-[1fr_auto_1fr] items-center justify-between gap-3">
       <!-- Brand Identity -->
       <div class="flex items-center gap-3">
         <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-terracotta-500 via-terracotta-600 to-forest-700 text-white flex items-center justify-center shadow-md shrink-0">
@@ -144,8 +144,17 @@
         </div>
       </div>
 
+      <!-- Top Center Logo -->
+      <div class="flex items-center justify-center mx-auto lg:mx-0">
+        <img
+          src="https://i.ibb.co/Kz5GHSz3/AISelect-20261129-005657-Gallery.jpg"
+          alt="हो शब्दकोश लोगो"
+          class="w-14 h-14 sm:w-16 sm:h-16 rounded-full object-cover border-2 border-forest-600 dark:border-ochre-400 shadow-md bg-white"
+        />
+      </div>
+
       <!-- Navigation Tabs & Action Controls -->
-      <div class="flex items-center gap-2 flex-wrap">
+      <div class="flex items-center gap-2 flex-wrap lg:justify-self-end">
         <nav class="flex bg-parchment-200/80 dark:bg-stone-900 p-1 rounded-2xl border border-parchment-300/70 dark:border-stone-800" aria-label="Main Navigation">
           <button data-tab="dictionary" class="nav-tab px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-forest-700 text-white shadow-xs transition-all">
             शब्दकोश <span class="hidden md:inline">Dictionary</span>
